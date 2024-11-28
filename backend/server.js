@@ -1,21 +1,23 @@
-require('dotenv').config();
+require('dotenv').config();  // Load environment variables from .env file
 const express = require('express');
-const connectDB = require('./db/mongo');
-const ticketRoutes = require('./routes/ticketRoutes');
-const errorHandler = require('./middlewares/errorHandler');
+const connectDB = require('./db/mongo');  // MongoDB connection function
+const ticketRoutes = require('./routes/ticketRoutes');  // API routes for tickets
+const flightRoutes = require('./routes/flightRoutes');  // API routes for flights (imported here)
+const errorHandler = require('./middlewares/errorHandler');  // Custom error handler middleware
 
 const app = express();
 
-// Middleware to parse JSON
+// Middleware to parse incoming JSON data
 app.use(express.json());
 
 // Connect to MongoDB
 connectDB();
 
-// Routes
+// API Routes
 app.use('/api', ticketRoutes);
+app.use('/api/flights', flightRoutes);  // Add this line for flights
 
-// Error handler
+// Error handler middleware (should be the last middleware)
 app.use(errorHandler);
 
 // Start the server
