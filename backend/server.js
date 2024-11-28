@@ -2,7 +2,6 @@ require('dotenv').config();  // Load environment variables from .env file
 const express = require('express');
 const connectDB = require('./db/mongo');  // MongoDB connection function
 const ticketRoutes = require('./routes/ticketRoutes');  // API routes for tickets
-const flightRoutes = require('./routes/flightRoutes');  // API routes for flights (imported here)
 const errorHandler = require('./middlewares/errorHandler');  // Custom error handler middleware
 
 const app = express();
@@ -15,10 +14,15 @@ connectDB();
 
 // API Routes
 app.use('/api', ticketRoutes);
-app.use('/api/flights', flightRoutes);  // Add this line for flights
 
 // Error handler middleware (should be the last middleware)
 app.use(errorHandler);
+
+const cors = require('cors');
+
+// Enable CORS for all origins (or configure it more specifically as needed)
+app.use(cors());
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
