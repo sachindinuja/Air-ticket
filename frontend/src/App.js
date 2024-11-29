@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import TicketForm from './components/TicketForm';
+import TicketList from './components/TicketList';
+import { getTickets } from './api/api';
 
-function App() {
+const App = () => {
+  const [tickets, setTickets] = useState([]);
+
+  const fetchTickets = async () => {
+    try {
+      const { data } = await getTickets();
+      setTickets(data);
+    } catch (err) {
+      console.error('Error fetching tickets:', err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Ticket Management System</h1>
+      <TicketForm fetchTickets={fetchTickets} />
+      <TicketList tickets={tickets} />
     </div>
   );
-}
+};
 
 export default App;
