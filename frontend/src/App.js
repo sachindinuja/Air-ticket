@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar'; // Navbar component
 import TicketForm from './components/TicketForm';
 import TicketList from './components/TicketList';
+import Footer from './components/Footer'; // Footer component
 import { getTickets } from './api/api';
+import './styles/App.css';
 
 const App = () => {
   const [tickets, setTickets] = useState([]);
@@ -20,10 +23,13 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Ticket Management System</h1>
-      <TicketForm fetchTickets={fetchTickets} />
-      <TicketList tickets={tickets} />
+    <div className="app">
+      <Navbar />
+      <div className="content">
+        <TicketForm fetchTickets={fetchTickets} />
+        <TicketList tickets={tickets} />
+      </div>
+      <Footer />
     </div>
   );
 };
