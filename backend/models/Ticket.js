@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const ticketSchema = new mongoose.Schema({
+// Define the Ticket schema
+const TicketSchema = new mongoose.Schema({
     flightNumber: { type: String, required: true },
     passengerName: { type: String, required: true },
     seatNumber: { type: String, required: true },
@@ -8,6 +9,5 @@ const ticketSchema = new mongoose.Schema({
     arrival: { type: Date, required: true },
 });
 
-const Ticket = mongoose.model('Ticket', ticketSchema);
-
-module.exports = Ticket;
+// Correctly export the Mongoose model
+module.exports = mongoose.model('Ticket', TicketSchema);
