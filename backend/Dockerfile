@@ -1,5 +1,5 @@
 # Dockerfile for the node  server service
-FROM node:20.10-alphine
+FROM node:20.10-alpine
 
 #set the working directory
 WORKDIR /app
