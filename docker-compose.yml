@@ -1,15 +1,6 @@
-services:
-  frontend:
-    build:
-      context: ./frontend  # Path to your frontend app's Dockerfile
-    container_name: air-ticket-frontend
-    ports:
-      - "3000:3000"  # The frontend app runs on port 3000
-    volumes:
-      - ./frontend:/app  # Mount the frontend source code as a volume
-    depends_on:
-      - backend
+version: '3.8'
 
+services:
   backend:
     build:
       context: ./backend  # Path to your backend app's Dockerfile
@@ -20,8 +11,16 @@ services:
       - MONGO_URI=mongodb+srv://air:air@airplane.wwvwd.mongodb.net/?retryWrites=true&w=majority&appName=Airplane
     volumes:
       - ./backend:/app  # Mount the backend source code as a volume
-    depends_on:
-      - frontend
-    stdin_open: true # enable container inside terminal
-    tty: true
 
+  frontend:
+    build:
+      context: ./frontend  # Path to your frontend app's Dockerfile
+    container_name: air-ticket-frontend
+    ports:
+      - "3000:3000"  # The frontend app runs on port 3000
+    volumes:
+      - ./frontend:/app  # Mount the frontend source code as a volume
+    depends_on:
+      - backend  # Frontend depends on Backend service being up
+    stdin_open: true  # Enable container inside terminal
+    tty: true          # Enable pseudo-TTY
