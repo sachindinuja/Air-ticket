@@ -22,6 +22,6 @@ services:
       - ./backend:/app  # Mount the backend source code as a volume
     depends_on:
       - frontend
-    stdin_open: true
+    stdin_open: true # enable container inside terminal
     tty: true
 
