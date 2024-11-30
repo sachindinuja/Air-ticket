@@ -1,0 +1,3 @@
+# This is sample .Dockerignore file
+node_modules
+package-lock.json
