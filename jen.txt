@@ -76,3 +76,34 @@ pipeline {
         }
     }
 }
+
+//update frontend docker file proxy setting
+FROM node:20.10-alpine
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Update NPM, set faster registry, and configure timeout
+#Sometimes, the default NPM registry (https://registry.npmjs.org/) can be slow or unreachable. Switch to a faster mirror like the yarnpkg registry by adding this command in your Dockerfile before npm install
+RUN npm install -g npm@latest
+RUN npm config set registry https://registry.yarnpkg.com/
+RUN npm config set timeout 300000
+
+# Install dependencies with retry logic
+RUN npm install || npm install || npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the React app
+RUN npm run build
+
+# Serve the app using Nginx
+FROM nginx:alpine
+COPY --from=0 /app/build /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
