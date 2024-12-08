@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {  
-                bat 'docker build -t sachind01/nodeapp-cuban:%BUILD_NUMBER% .'
+                bat 'docker build -t sachind01/airTicket-cuban:%BUILD_NUMBER% .'
             }
         }
         stage('Login to Docker Hub') {
