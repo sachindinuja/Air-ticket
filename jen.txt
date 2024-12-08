@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // DockerHub credentials ID
+        NODE_ENV = 'production' // Node.js environment
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Clone the repository
+                checkout scm
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                dir('backend') {
+                    script {
+                        def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                        env.PATH = "${nodejs}\\bin;${env.PATH}"
+                    }
+                    // Use 'bat' for Windows commands
+                    bat 'npm install'
+                    bat 'npm run lint'
+                    bat 'npm test'
+                    bat 'docker build -t backend-app .'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    script {
+                        def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                        env.PATH = "${nodejs}\\bin;${env.PATH}"
+                    }
+                    // Use 'bat' for Windows commands
+                    bat 'npm install'
+                    bat 'npm run build'
+                    bat 'docker build -t frontend-app .'
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                withDockerRegistry([credentialsId: "${DOCKER_CREDENTIALS_ID}", url: '']) {
+                    // Push backend image
+                    bat 'docker tag backend-app your-dockerhub-username/backend-app:latest'
+                    bat 'docker push your-dockerhub-username/backend-app:latest'
+
+                    // Push frontend image
+                    bat 'docker tag frontend-app your-dockerhub-username/frontend-app:latest'
+                    bat 'docker push your-dockerhub-username/frontend-app:latest'
+                }
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                // Use 'bat' to run Docker Compose on Windows
+                bat 'docker-compose up -d --build'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Application built and deployed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
