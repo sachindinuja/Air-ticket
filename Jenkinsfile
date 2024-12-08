@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Push Image') {
             steps {
-                bat 'docker push adomicarts/nodeapp-cuban:%BUILD_NUMBER%'
+                bat 'docker push sachind01/airTicket-cuban:%BUILD_NUMBER%'
             }
         }
     }
