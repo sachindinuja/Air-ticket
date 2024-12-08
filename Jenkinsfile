@@ -1,5 +1,5 @@
 pipeline {
-    agent any 
+    agent any
     
     stages { 
         stage('SCM Checkout') {
@@ -9,39 +9,12 @@ pipeline {
                 }
             }
         }
-        // stage('Build Backend') {
-        //     steps {
-        //         dir('backend') {
-        //             script {
-        //                 def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-        //                 env.PATH = "${nodejs}\\bin;${env.PATH}"
-        //             }
-        //             // Use 'bat' for Windows commands
-        //             bat 'npm install'
-        //             bat 'npm run lint'
-        //             bat 'npm test'
-        //             bat 'docker build -t backend-app .'
-        //         }
-        //     }
-        // }
-
-        // stage('Build Frontend') {
-        //     steps {
-        //         dir('frontend') {
-        //             script {
-        //                 def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-        //                 env.PATH = "${nodejs}\\bin;${env.PATH}"
-        //             }
-        //             // Use 'bat' for Windows commands
-        //             bat 'npm install'
-        //             bat 'npm run build'
-        //             bat 'docker build -t frontend-app .'
-        //         }
-        //     }
-        // }
         stage('Build Docker Image') {
             steps {  
-                bat 'docker build -t sachind01/airticket-test:%BUILD_NUMBER% .'
+                // Ensure the correct directory is used for docker build
+                dir('backend') { // Change 'backend' to the folder where your Dockerfile exists
+                    bat 'docker build -t sachind01/airticket-test:%BUILD_NUMBER% .'
+                }
             }
         }
         stage('Login to Docker Hub') {
