@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {  
-                bat 'docker build -t sachind01/airTicket-test:%BUILD_NUMBER% .'
+                bat 'docker build -t sachind01/airticket-test:%BUILD_NUMBER% .'
             }
         }
         stage('Login to Docker Hub') {
@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Push Image') {
             steps {
-                bat 'docker push sachind01/airTicket-test:%BUILD_NUMBER%'
+                bat 'docker push sachind01/airticket-test:%BUILD_NUMBER%'
             }
         }
     }
