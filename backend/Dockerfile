@@ -7,11 +7,14 @@ WORKDIR /app
 #copy the package.jason file and package lock.jason
 COPY package*.jason ./
 
-#copy the rest of the aplication file
-COPY . .
+#before install nodemon Globally
+RUN npm install
 
 # nodemon globly install
 RUN npm install -g nodemon
+
+#copy the rest of the aplication file
+COPY . .
 
 #exporse the port your app will run on
 EXPOSE 5000
