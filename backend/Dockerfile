@@ -4,8 +4,8 @@ FROM node:20.10-alpine
 #set the working directory
 WORKDIR /app
 
-#copy the package.jason file and package lock.jason
-COPY package*.jason ./
+#copy the package.json file and package lock.json
+COPY package*.json ./
 
 #before install nodemon Globally
 RUN npm install
