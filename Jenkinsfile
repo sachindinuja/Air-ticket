@@ -1,6 +1,10 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKER_HUB_REPO = "sachind01/airticket-test"  // Docker Hub repository prefix
+    }
+
     stages { 
         stage('SCM Checkout') {
             steps {
@@ -9,11 +13,21 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
-            steps {  
-                // Ensure the correct directory is used for docker build
-                dir('backend') { // Change 'backend' to the folder where your Dockerfile exists
-                    bat 'docker build -t sachind01/airticket-test:%BUILD_NUMBER% .'
+        stage('Build Docker Images') {
+            parallel {
+                stage('Build Backend Image') {
+                    steps {  
+                        dir('backend') { 
+                            bat 'docker build -t %DOCKER_HUB_REPO%-backend:%BUILD_NUMBER% .'
+                        }
+                    }
+                }
+                stage('Build Frontend Image') {
+                    steps {
+                        dir('frontend') { 
+                            bat 'docker build -t %DOCKER_HUB_REPO%-frontend:%BUILD_NUMBER% .'
+                        }
+                    }
                 }
             }
         }
@@ -26,9 +40,18 @@ pipeline {
                 }
             }
         }
-        stage('Push Image') {
-            steps {
-                bat 'docker push sachind01/airticket-test:%BUILD_NUMBER%'
+        stage('Push Docker Images') {
+            parallel {
+                stage('Push Backend Image') {
+                    steps {
+                        bat 'docker push %DOCKER_HUB_REPO%-backend:%BUILD_NUMBER%'
+                    }
+                }
+                stage('Push Frontend Image') {
+                    steps {
+                        bat 'docker push %DOCKER_HUB_REPO%-frontend:%BUILD_NUMBER%'
+                    }
+                }
             }
         }
     }
