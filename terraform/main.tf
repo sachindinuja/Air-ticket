@@ -2,16 +2,12 @@ provider "azurerm" {
   features {}
 }
 
-variable "acr_name" {
-  default = "AirTicketRegistry"
-}
-
 variable "frontend_image" {
-  default = "AirTicketRegistry.azurecr.io/airticketreservation-frontend:latest"
+  default = "airticketregistry.azurecr.io/airticketreservation-frontend:latest"
 }
 
 variable "backend_image" {
-  default = "AirTicketRegistry.azurecr.io/airticketreservation-backend:latest"
+  default = "airticketregistry.azurecr.io/airticketreservation-backend:latest"
 }
 
 variable "azure_region" {
