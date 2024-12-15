@@ -2,18 +2,6 @@ provider "azurerm" {
   features {}
 }
 
-variable "frontend_image" {
-  default = "airticketregistry.azurecr.io/airticketreservation-frontend:latest"
-}
-
-variable "backend_image" {
-  default = "airticketregistry.azurecr.io/airticketreservation-backend:latest"
-}
-
-variable "azure_region" {
-  default = "eastus"
-}
-
 resource "azurerm_resource_group" "rg" {
   name     = "AirTicketRG"
   location = var.azure_region

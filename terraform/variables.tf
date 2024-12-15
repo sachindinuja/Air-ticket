@@ -1,13 +1,11 @@
-variable "acr_name" {
-  description = "Azure Container Registry Name"
-}
-
 variable "frontend_image" {
   description = "Frontend Docker image name"
+  default     = "airticketregistry.azurecr.io/airticketreservation-frontend:latest"
 }
 
 variable "backend_image" {
   description = "Backend Docker image name"
+  default     = "airticketregistry.azurecr.io/airticketreservation-backend:latest"
 }
 
 variable "azure_region" {
