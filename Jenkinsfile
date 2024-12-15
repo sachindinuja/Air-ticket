@@ -2,10 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_REPO = "sachind01/airticket-test"  // Docker Hub repository prefix
+        DOCKER_HUB_REPO = "AirTicketRegistry.azurecr.io"  // ACR repository
+        TERRAFORM_DIR = "terraform"                      // Terraform directory
+        AZURE_REGION = "eastus"                          // Azure region
     }
 
-    stages { 
+    stages {
         stage('SCM Checkout') {
             steps {
                 retry(3) {
@@ -13,51 +15,65 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Images') {
             parallel {
                 stage('Build Backend Image') {
-                    steps {  
-                        dir('backend') { 
-                            bat 'docker build -t %DOCKER_HUB_REPO%-backend:%BUILD_NUMBER% .'
+                    steps {
+                        dir('backend') {
+                            bat 'docker build -t %DOCKER_HUB_REPO%/airticketreservation-backend:latest .'
                         }
                     }
                 }
                 stage('Build Frontend Image') {
                     steps {
-                        dir('frontend') { 
-                            bat 'docker build -t %DOCKER_HUB_REPO%-frontend:%BUILD_NUMBER% .'
+                        dir('frontend') {
+                            bat 'docker build -t %DOCKER_HUB_REPO%/airticketreservation-frontend:latest .'
                         }
                     }
                 }
             }
         }
-        stage('Login to Docker Hub') {
-            steps {
-                withCredentials([string(credentialsId: 'test-dockerid', variable: 'test-dockerhubpass')]) {
-                    script {
-                        bat "docker login -u sachind01 -p %test-dockerhubpass%"
-                    }
-                }
-            }
-        }
-        stage('Push Docker Images') {
+
+        stage('Push Docker Images to ACR') {
             parallel {
                 stage('Push Backend Image') {
                     steps {
-                        bat 'docker push %DOCKER_HUB_REPO%-backend:%BUILD_NUMBER%'
+                        withCredentials([string(credentialsId: 'azure-acr', variable: 'ACR_PASS')]) {
+                            bat '''
+                            docker login %DOCKER_HUB_REPO% -u %DOCKER_HUB_REPO% -p %ACR_PASS%
+                            docker push %DOCKER_HUB_REPO%/airticketreservation-backend:latest
+                            '''
+                        }
                     }
                 }
                 stage('Push Frontend Image') {
                     steps {
-                        bat 'docker push %DOCKER_HUB_REPO%-frontend:%BUILD_NUMBER%'
+                        withCredentials([string(credentialsId: 'azure-acr', variable: 'ACR_PASS')]) {
+                            bat '''
+                            docker login %DOCKER_HUB_REPO% -u %DOCKER_HUB_REPO% -p %ACR_PASS%
+                            docker push %DOCKER_HUB_REPO%/airticketreservation-frontend:latest
+                            '''
+                        }
                     }
                 }
             }
         }
+
+        stage('Prepare Terraform') {
+            steps {
+                dir(TERRAFORM_DIR) {
+                    bat '''
+                    terraform init
+                    '''
+                }
+            }
+        }
     }
+
     post {
         always {
-            bat 'docker logout'
+            echo "Pipeline completed. Run 'terraform apply' manually to deploy."
         }
     }
 }
