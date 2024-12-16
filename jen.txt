@@ -218,3 +218,18 @@ pipeline {
 }
 
 
+Tag and Push Docker Images: Tag your Docker images with the ACR registry name:
+
+az acr login --name airticketregistry
+bash
+Copy code
+docker tag airticketreservation-frontend:latest airticketregistry.azurecr.io/airticketreservation-frontend:latest
+docker tag airticketreservation-backend:latest airticketregistry.azurecr.io/airticketreservation-backend:latest
+Push the images to ACR:
+
+bash
+Copy code
+docker push airticketregistry.azurecr.io/airticketreservation-frontend:latest
+docker push airticketregistry.azurecr.io/airticketreservation-backend:latest
+
+
