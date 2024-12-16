@@ -1,7 +1,9 @@
 # AirTicket Application Deployment
 
-This repository contains a **frontend** and **backend** application, both containerized using Docker.
-The project includes steps to build, test, and deploy these containers locally and automate the process using Jenkins for deployment to Azure Container Instances (ACI).
+This project demonstrates a complete CI/CD pipeline for deploying a frontend and backend application to Azure.
+The applications are containerized using Docker and deployed to Azure Container Instances (ACI) via Azure Container Registry (ACR).
+The pipeline automates the process of building, testing, containerizing, and deploying the applications, ensuring a seamless and efficient workflow.
+This setup includes local testing, Azure integration, and automation using Jenkins for continuous integration and deployment..
 
 ---
 
