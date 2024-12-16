@@ -21,14 +21,14 @@ pipeline {
                 stage('Build Backend Image') {
                     steps {
                         dir('backend') {
-                            sh 'docker build -t $ACR_REPO/airticketreservation-backend:latest .'
+                            bat "docker build -t %ACR_REPO%/airticketreservation-backend:latest ."
                         }
                     }
                 }
                 stage('Build Frontend Image') {
                     steps {
                         dir('frontend') {
-                            sh 'docker build -t $ACR_REPO/airticketreservation-frontend:latest .'
+                            bat "docker build -t %ACR_REPO%/airticketreservation-frontend:latest ."
                         }
                     }
                 }
@@ -40,20 +40,20 @@ pipeline {
                 stage('Push Backend Image') {
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'azure-acr', usernameVariable: 'ACR_USER', passwordVariable: 'ACR_PASS')]) {
-                            sh '''
-                            docker login $ACR_REPO -u $ACR_USER -p $ACR_PASS
-                            docker push $ACR_REPO/airticketreservation-backend:latest
-                            '''
+                            bat """
+                            docker login %ACR_REPO% -u %ACR_USER% -p %ACR_PASS%
+                            docker push %ACR_REPO%/airticketreservation-backend:latest
+                            """
                         }
                     }
                 }
                 stage('Push Frontend Image') {
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'azure-acr', usernameVariable: 'ACR_USER', passwordVariable: 'ACR_PASS')]) {
-                            sh '''
-                            docker login $ACR_REPO -u $ACR_USER -p $ACR_PASS
-                            docker push $ACR_REPO/airticketreservation-frontend:latest
-                            '''
+                            bat """
+                            docker login %ACR_REPO% -u %ACR_USER% -p %ACR_PASS%
+                            docker push %ACR_REPO%/airticketreservation-frontend:latest
+                            """
                         }
                     }
                 }
@@ -63,7 +63,7 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline completed. Docker images pushed to ACR."
+            echo "Pipeline completed successfully!"
         }
     }
 }
