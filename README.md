@@ -35,8 +35,8 @@ This setup includes local testing, Azure integration, and automation using Jenki
        --ports 3000 \
        --ip-address Public
 
-5. Monitoring with Grafana
-   npm install prom-client
+5. Monitoring with Grafana \
+   npm install prom-client \
    ![Grafana dashboard](images/Grafana.png)
 
 
