@@ -231,5 +231,3 @@ bash
 Copy code
 docker push airticketregistry.azurecr.io/airticketreservation-frontend:latest
 docker push airticketregistry.azurecr.io/airticketreservation-backend:latest
-
-
